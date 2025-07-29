@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full overflow-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tata Motors - Customer Engagement Portal</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1e40af">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Tata Motors">
+    <link rel="apple-touch-icon" href="https://www.tatamotors.com/wp-content/themes/TataMotors/images/Tata-Motors-logo.svg">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'tata-blue': '#1e40af',
+                        'electric-blue': '#3b82f6',
+                        'off-white': '#f8fafc',
+                        'tata-gold': '#f59e0b',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'Roboto', 'sans-serif'],
+                        'tata': ['Roboto', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        html, body {
+            height: 100%;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Mobile-specific layout (max-width: 768px) */
+        @media (max-width: 768px) {
+            /* Enable scrolling for mobile */
+            html, body {
+                overflow: auto !important;
+                height: auto !important;
+                background-color: #1a1a1a;
+                position: relative;
+                min-height: 100vh;
+            }
+            
+            /* Ensure main content container allows scrolling */
+            .relative.z-10 {
+                overflow: visible;
+                height: auto;
+            }
+            
+            /* Mobile-specific scrolling behavior */
+            .relative.z-10.h-full.flex.flex-col.overflow-hidden.md\\:overflow-hidden.md\\:h-full {
+                height: auto;
+                overflow: visible;
+            }
+            
+            /* Ensure content flows properly */
+            main {
+                overflow: visible;
+                position: relative;
+            }
+            
+            /* Mobile header overlay styling - enhanced aesthetics */
+            .md\\:hidden.fixed.top-0 {
+                background: rgba(0, 0, 0, 0.15);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                padding: 12px 16px;
+            }
+            
+            /* Mobile slideshow positioning - top half of viewport */
+            #background-slideshow {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 50vh;
+                z-index: 0;
+            }
+            
+            /* Slideshow fade overlay for seamless transition */
+            #background-slideshow::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 30%;
+                background: linear-gradient(
+                    to bottom,
+                    transparent 0%,
+                    rgba(0, 0, 0, 0.2) 50%,
+                    rgba(0, 0, 0, 0.4) 100%
+                );
+                z-index: 1;
+                pointer-events: none;
+            }
+            
+            .background-slide {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-size: cover;
+                background-position: center top;
+                background-repeat: no-repeat;
+                opacity: 0;
+                transition: opacity 2s ease-in-out;
+            }
+            
+            /* Mobile main content container - full glassmorphism panel */
+            .relative.z-10 {
+                background: transparent;
+                margin-top: 42vh;
+            }
+            
+            /* Mobile content sheet - enhanced aesthetics with fade effect */
+            main {
+                background: linear-gradient(
+                    to bottom,
+                    rgba(0, 0, 0, 0.25) 0%,
+                    rgba(0, 0, 0, 0.45) 20%,
+                    rgba(0, 0, 0, 0.65) 50%,
+                    rgba(0, 0, 0, 0.8) 80%,
+                    rgba(0, 0, 0, 0.85) 100%
+                );
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border-radius: 28px 28px 0 0;
+                margin-top: -30px;
+                padding: 28px 20px 36px 20px;
+                min-height: 55vh;
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+            }
+            
+            /* Mobile text color adjustments - enhanced aesthetics */
+            #welcome-text {
+                color: white;
+                text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+                font-weight: 800;
+                letter-spacing: -0.02em;
+            }
+            
+            /* Mobile action hub - vertical list layout */
+            section {
+                padding: 0;
+            }
+            
+            /* Change grid to vertical list */
+            .grid.grid-cols-1.md\\:grid-cols-2 {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            /* AI Assistant card spacing in vertical layout */
+            #ai-assistant {
+                margin-top: 12px !important;
+            }
+            
+            /* Mobile glassmorphism cards - enhanced aesthetics */
+            .glass-card {
+                backdrop-filter: blur(24px);
+                -webkit-backdrop-filter: blur(24px);
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                box-shadow: 0 10px 35px rgba(0, 0, 0, 0.12);
+                border-radius: 20px;
+                padding: 18px;
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            
+            .glass-card:hover {
+                border-color: rgba(255, 255, 255, 0.3);
+                box-shadow: 0 16px 50px rgba(0, 0, 0, 0.2);
+                background: rgba(255, 255, 255, 0.15);
+                transform: translateY(-3px) scale(1.02);
+            }
+            
+            /* Mobile text colors for glass cards */
+            .glass-card h3 {
+                color: white;
+                font-weight: 600;
+            }
+            
+            .glass-card p {
+                color: rgba(255, 255, 255, 0.8);
+            }
+            
+            .glass-card i {
+                color: white;
+            }
+            
+            /* Enhanced icon containers for mobile - improved aesthetics */
+            .glass-card .w-8.h-8.md\\:w-12.md\\:h-12 {
+                width: 52px;
+                height: 52px;
+                background: rgba(255, 255, 255, 0.15);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 16px;
+                transition: all 0.3s ease;
+            }
+            
+            .glass-card:hover .w-8.h-8.md\\:w-12.md\\:h-12 {
+                background: rgba(255, 255, 255, 0.2);
+                border-color: rgba(255, 255, 255, 0.3);
+                transform: scale(1.05);
+            }
+            
+            .glass-card .w-8.h-8.md\\:w-12.md\\:h-12 i {
+                width: 24px;
+                height: 24px;
+            }
+            
+            /* Special styling for gold-themed cards */
+            .glass-card .bg-tata-gold\/20 {
+                background: rgba(245, 158, 11, 0.3);
+                border-color: rgba(245, 158, 11, 0.4);
+            }
+            
+            .glass-card .bg-tata-gold\/20 i {
+                color: #fbbf24;
+            }
+            
+            /* Special styling for electric blue cards */
+            .glass-card .bg-electric-blue\/20 {
+                background: rgba(59, 130, 246, 0.3);
+                border-color: rgba(59, 130, 246, 0.4);
+            }
+            
+            .glass-card .bg-electric-blue\/20 i {
+                color: #60a5fa;
+            }
+            
+            /* Mobile hero text positioning - enhanced aesthetics */
+            .text-center.mb-8.md\:mb-12.mt-4.md\:mt-0 {
+                margin-top: 0;
+                margin-bottom: 36px;
+            }
+            
+            /* Enhanced spacing for better aesthetics */
+            .grid.grid-cols-1.md\\:grid-cols-2 {
+                gap: 16px;
+            }
+            
+            /* AI Assistant card spacing in vertical layout */
+            #ai-assistant {
+                margin-top: 16px !important;
+            }
+            
+            /* Mobile floating action button positioning */
+            #fab {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            /* Mobile chat window positioning */
+            #chat-window {
+                bottom: 20px;
+                right: 20px;
+                width: calc(100vw - 40px);
+                max-width: 320px;
+            }
+            
+            /* Mobile modal adjustments */
+            .modal-backdrop {
+                padding: 16px;
+            }
+            
+            /* Ensure modals work well on mobile */
+            .glass-card.rounded-xl.md\:rounded-2xl {
+                border-radius: 16px;
+            }
+            
+            /* Hyper-responsive adjustments */
+            @media (max-width: 375px) {
+                main {
+                    padding: 20px 12px 28px 12px;
+                }
+                
+                .glass-card {
+                    padding: 14px;
+                }
+                
+                .glass-card .w-8.h-8.md\\:w-12.md\\:h-12 {
+                    width: 44px;
+                    height: 44px;
+                }
+                
+                .glass-card .w-8.h-8.md\\:w-12.md\\:h-12 i {
+                    width: 22px;
+                    height: 22px;
+                }
+            }
+            
+            @media (min-width: 414px) {
+                main {
+                    padding: 28px 20px 36px 20px;
+                }
+                
+                .glass-card {
+                    padding: 18px;
+                }
+            }
+        }
+        
+        @media (min-width: 769px) {
+            html, body {
+                overflow: hidden;
+            }
+            
+            /* Desktop background remains unchanged */
+            .background-slide {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                opacity: 0;
+                transition: opacity 2s ease-in-out;
+            }
+            
+            /* Desktop header styling */
+            header {
+                background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 100%);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        .background-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0;
+            z-index: 0;
+            transition: opacity 2s ease-in-out;
+        }
+        
+        .glass-card {
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .text-shadow {
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header-fade {
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        .logo-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .fab {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .fab:hover {
+            transform: scale(1.1);
+        }
+        
+        .chat-window {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .modal-backdrop {
+            backdrop-filter: blur(32px);
+            -webkit-backdrop-filter: blur(32px);
+        }
+        
+        .toast {
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .message-animation {
+            animation: messageSlideIn 0.3s ease-out;
+        }
+        
+        @keyframes messageSlideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Sporty transition effects */
+        @keyframes slideInFromRight {
+            from {
+                transform: translateX(100%) scale(1.1);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideInFromLeft {
+            from {
+                transform: translateX(-100%) scale(1.1);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes zoomIn {
+            from {
+                transform: scale(1.2);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeInScale {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans text-white bg-off-white relative">
+    <!-- Background Slideshow -->
+    <div id="background-slideshow" class="fixed inset-0 z-0">
+        <div class="background-slide" style="background-image: url('https://www.tatamotors.com/wp-content/uploads/2025/05/All-new-altroz-ember-glow-lowres.jpg');"></div>
+        <div class="background-slide" style="background-image: url('https://wallpaperbat.com/img/884390-tata-motors-cars-showroom-mascot-motors-pvt-ltd-on-x-a-glimpse-of-the-beast-in-the-wild-ft-harrier-untamedkaziranga-edition-for-any-query-contact-us-91-9639008800-70-71-aligarh-91.jpg');"></div>
+        <div class="background-slide" style="background-image: url('https://cars.tatamotors.com.mu/images/brandbanners/Nexon_banner_2025.webp');"></div>
+        <div class="background-slide" style="background-image: url('https://www.tatamotors.com/wp-content/uploads/2024/07/1-Front-Image-With-Branding-Curvv-Ice-1.jpg');"></div>
+        <div class="background-slide" style="background-image: url('https://images5.alphacoders.com/123/thumbbig-1236548.webp');"></div>
+        <div class="background-slide" style="background-image: url('https://images.carandbike.com/cms/articles/2024/6/3213579/Tata_Tiago_i_CNG_34_82b98cd302.jpg');"></div>
+        <div class="background-slide" style="background-image: url('https://cars.tatamotors.bt/images/brandbanners/safari-new-banner.webp');"></div>
+    </div>
+
+    <!-- Mobile Header Overlay (only visible on mobile) -->
+    <div class="md:hidden fixed top-0 left-0 right-0 z-20 p-4">
+        <div class="flex items-center space-x-2">
+            <!-- Tata Motors Logo -->
+            <div class="flex items-center">
+                <img src="https://www.tatamotors.com/wp-content/themes/TataMotors/images/Tata-Motors-logo.svg" alt="Tata Motors" class="h-8 filter brightness-0 invert">
+            </div>
+        </div>
+    </div>
+
+            <!-- Main Content Overlay -->
+        <div class="relative z-10 h-full flex flex-col overflow-hidden md:overflow-hidden md:h-full">
+        <!-- Header -->
+        <header class="hidden md:flex items-center justify-between px-4 md:px-6 py-3 md:py-4 header-fade border-b border-white/10">
+            <div class="flex items-center space-x-2 md:space-x-4">
+                <!-- Tata Motors Logo -->
+                <div class="flex items-center">
+                    <img src="https://www.tatamotors.com/wp-content/themes/TataMotors/images/Tata-Motors-logo.svg" alt="Tata Motors" class="h-8 md:h-12 filter brightness-0 invert">
+                </div>
+            </div>
+            <!-- Desktop tagline -->
+            <div class="hidden md:block">
+                <p class="text-white text-sm font-medium">Official Dealer Portal</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col justify-center px-4 md:px-6 overflow-y-auto py-4 md:py-0">
+            <!-- Hero Text -->
+            <div class="text-center mb-8 md:mb-12 mt-4 md:mt-0">
+                <h1 id="welcome-text" class="text-3xl md:text-5xl lg:text-7xl font-bold text-white text-shadow leading-tight">
+                    <span class="inline-block opacity-0">Welcome to Bijjargi Motors</span>
+                    <span class="inline-block opacity-0 ml-2 md:ml-4 text-tata-gold">[Name]</span>
+                </h1>
+            </div>
+
+            <!-- Action Hub -->
+            <section class="max-w-4xl mx-auto w-full pb-12 md:pb-0">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6">
+                    <!-- Call Advisor -->
+                    <div class="glass-card rounded-md md:rounded-2xl p-3 md:p-6 cursor-pointer opacity-0 hover:scale-105 transition-transform duration-200" data-action="call-advisor">
+                        <div class="flex items-center space-x-2 md:space-x-4">
+                            <div class="w-8 h-8 md:w-12 md:h-12 bg-white/20 rounded-md md:rounded-xl flex items-center justify-center border border-white/30">
+                                <i data-lucide="phone-call" class="w-4 h-4 md:w-6 md:h-6 text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-white text-sm md:text-lg">Call Advisor</h3>
+                                <p class="text-white/80 text-xs md:text-sm">Get expert guidance</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Book Test Drive -->
+                    <div class="glass-card rounded-md md:rounded-2xl p-3 md:p-6 cursor-pointer opacity-0 hover:scale-105 transition-transform duration-200" data-action="book-test-drive">
+                        <div class="flex items-center space-x-2 md:space-x-4">
+                            <div class="w-8 h-8 md:w-12 md:h-12 bg-tata-gold/20 rounded-md md:rounded-xl flex items-center justify-center border border-tata-gold/30">
+                                <i data-lucide="car" class="w-4 h-4 md:w-6 md:h-6 text-tata-gold"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-white text-sm md:text-lg">Book Test Drive</h3>
+                                <p class="text-white/80 text-xs md:text-sm">Experience the drive</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Request Callback -->
+                    <div class="glass-card rounded-md md:rounded-2xl p-3 md:p-6 cursor-pointer opacity-0 hover:scale-105 transition-transform duration-200" data-action="request-callback">
+                        <div class="flex items-center space-x-2 md:space-x-4">
+                            <div class="w-8 h-8 md:w-12 md:h-12 bg-tata-gold/20 rounded-md md:rounded-xl flex items-center justify-center border border-tata-gold/30">
+                                <i data-lucide="clock" class="w-4 h-4 md:w-6 md:h-6 text-tata-gold"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-white text-sm md:text-lg">Request Callback</h3>
+                                <p class="text-white/80 text-xs md:text-sm">We'll call you back</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- View Offers -->
+                    <div class="glass-card rounded-md md:rounded-2xl p-3 md:p-6 cursor-pointer opacity-0 hover:scale-105 transition-transform duration-200" data-action="view-offers">
+                        <div class="flex items-center space-x-2 md:space-x-4">
+                            <div class="w-8 h-8 md:w-12 md:h-12 bg-tata-gold/20 rounded-md md:rounded-xl flex items-center justify-center border border-tata-gold/30">
+                                <i data-lucide="percent" class="w-4 h-4 md:w-6 md:h-6 text-tata-gold"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-white text-sm md:text-lg">View Offers</h3>
+                                <p class="text-white/80 text-xs md:text-sm">Special deals & discounts</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Assistant -->
+                <div class="glass-card rounded-md md:rounded-2xl p-3 md:p-6 mt-3 md:mt-6 cursor-pointer opacity-0 hover:scale-105 transition-transform duration-200" id="ai-assistant" style="margin-top: 12px;">
+                    <div class="flex items-center space-x-2 md:space-x-4">
+                        <div class="w-8 h-8 md:w-12 md:h-12 bg-electric-blue/20 rounded-md md:rounded-xl flex items-center justify-center border border-electric-blue/30">
+                            <i data-lucide="bot" class="w-4 h-4 md:w-6 md:h-6 text-electric-blue"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-white text-sm md:text-lg">AI Assistant</h3>
+                            <p class="text-white/80 text-xs md:text-sm">Ask me anything about your new Tata...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Floating Action Button -->
+    <div id="fab" class="fixed bottom-4 right-4 z-40">
+        <button class="fab glass-card w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center text-white">
+            <i data-lucide="message-circle" class="w-6 h-6 md:w-7 md:h-7"></i>
+        </button>
+    </div>
+
+    <!-- Chat Window -->
+    <div id="chat-window" class="fixed bottom-4 right-4 z-50 w-72 h-80 md:w-80 md:h-96 glass-card rounded-2xl hidden">
+        <div class="flex items-center justify-between p-3 border-b border-white/20">
+            <div class="flex items-center space-x-3">
+                <div class="w-7 h-7 bg-electric-blue/20 rounded-lg flex items-center justify-center border border-electric-blue/30">
+                    <i data-lucide="bot" class="w-3.5 h-3.5 text-electric-blue"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-white text-xs md:text-sm">AI Assistant</h3>
+                    <p class="text-xs text-white/70">Online</p>
+                </div>
+            </div>
+            <button id="close-chat" class="w-7 h-7 rounded-lg hover:bg-white/10 flex items-center justify-center transition-colors">
+                <i data-lucide="x" class="w-4 h-4 text-white"></i>
+            </button>
+        </div>
+        
+        <div id="chat-messages" class="flex-1 p-3 overflow-y-auto h-48 md:h-64 space-y-2">
+            <div class="message-animation bg-white/10 rounded-lg p-2.5 max-w-xs border border-white/20">
+                <p class="text-xs md:text-sm text-white leading-relaxed">Hello! I'm your Tata Motors AI assistant. How can I help you today?</p>
+            </div>
+        </div>
+        
+        <div class="p-3 border-t border-white/20">
+            <div class="flex space-x-2">
+                <input type="text" id="chat-input" placeholder="Type your message..." class="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-transparent text-white placeholder-white/50 text-xs md:text-sm leading-relaxed">
+                <button id="send-message" class="px-3 py-2 bg-electric-blue/20 text-white rounded-lg hover:bg-electric-blue/30 border border-electric-blue/30 transition-colors flex items-center justify-center">
+                    <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-overlay" class="fixed inset-0 bg-black/30 z-50 hidden modal-backdrop">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div id="modal-content" class="glass-card rounded-2xl max-w-md w-full mx-4 transform scale-95 opacity-0">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 id="modal-title" class="text-lg font-semibold text-white"></h3>
+                        <button id="close-modal" class="w-8 h-8 rounded-lg hover:bg-white/10 flex items-center justify-center">
+                            <i data-lucide="x" class="w-5 h-5 text-white"></i>
+                        </button>
+                    </div>
+                    <p id="modal-message" class="text-white/80 mb-6"></p>
+                    <div class="flex space-x-3">
+                        <button id="modal-confirm" class="flex-1 px-4 py-2 bg-electric-blue/20 text-white rounded-lg hover:bg-electric-blue/30 border border-electric-blue/30">
+                            Confirm
+                        </button>
+                        <button id="modal-cancel" class="flex-1 px-4 py-2 border border-white/30 text-white rounded-lg hover:bg-white/10">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Drive Modal -->
+    <div id="test-drive-modal" class="fixed inset-0 bg-black/30 z-50 hidden modal-backdrop">
+        <div class="flex items-center justify-center min-h-screen p-3 md:p-4">
+            <div class="glass-card rounded-xl md:rounded-2xl max-w-sm md:max-w-md w-full mx-2 md:mx-4 transform scale-95 opacity-0">
+                <div class="p-4 md:p-6 text-center">
+                    <div class="w-12 h-12 md:w-16 md:h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4 border border-green-500/30">
+                        <i data-lucide="check-circle" class="w-6 h-6 md:w-8 md:h-8 text-green-400"></i>
+                    </div>
+                    <h3 class="text-lg md:text-xl font-semibold text-white mb-2">An Excellent Choice!</h3>
+                    <p class="text-white/80 text-sm md:text-base">Your test drive request has been registered. Our team will be in touch shortly to confirm your preferred time and location.</p>
+                    <button class="mt-4 md:mt-6 px-4 md:px-6 py-2 md:py-3 bg-electric-blue/20 text-white rounded-lg hover:bg-electric-blue/30 border border-electric-blue/30 transition-colors text-sm md:text-base" data-action="close-modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Callback Modal -->
+    <div id="callback-modal" class="fixed inset-0 bg-black/30 z-50 hidden modal-backdrop">
+        <div class="flex items-center justify-center min-h-screen p-3 md:p-4">
+            <div class="glass-card rounded-xl md:rounded-2xl max-w-sm md:max-w-md w-full mx-2 md:mx-4 transform scale-95 opacity-0">
+                <div class="p-4 md:p-6">
+                    <!-- Day Selection View -->
+                    <div data-view="day-selection">
+                        <div class="flex items-center justify-between mb-3 md:mb-4">
+                            <h3 class="text-base md:text-lg font-semibold text-white">Choose Your Preferred Day</h3>
+                            <button class="w-7 h-7 md:w-8 md:h-8 rounded-lg hover:bg-white/10 flex items-center justify-center transition-colors" data-action="close-modal">
+                                <i data-lucide="x" class="w-4 h-4 md:w-5 md:h-5 text-white"></i>
+                            </button>
+                        </div>
+                        <div class="space-y-2 md:space-y-3 mb-4 md:mb-6">
+                            <button class="w-full p-3 md:p-4 border border-white/30 rounded-lg hover:bg-white/10 text-left transition-colors" data-day="today">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h4 class="font-medium text-white text-sm md:text-base">Today</h4>
+                                        <p class="text-xs md:text-sm text-white/70">Get a call back today</p>
+                                    </div>
+                                    <i data-lucide="chevron-right" class="w-4 h-4 md:w-5 md:h-5 text-white/50"></i>
+                                </div>
+                            </button>
+                            <button class="w-full p-3 md:p-4 border border-white/30 rounded-lg hover:bg-white/10 text-left transition-colors" data-day="tomorrow">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h4 class="font-medium text-white text-sm md:text-base">Tomorrow</h4>
+                                        <p class="text-xs md:text-sm text-white/70">Get a call back tomorrow</p>
+                                    </div>
+                                    <i data-lucide="chevron-right" class="w-4 h-4 md:w-5 md:h-5 text-white/50"></i>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Time Selection View -->
+                    <div data-view="time-selection" class="hidden">
+                        <div class="flex items-center justify-between mb-3 md:mb-4">
+                            <h3 class="text-base md:text-lg font-semibold text-white">Choose Your Preferred Time</h3>
+                            <button class="w-7 h-7 md:w-8 md:h-8 rounded-lg hover:bg-white/10 flex items-center justify-center transition-colors" data-action="close-modal">
+                                <i data-lucide="x" class="w-4 h-4 md:w-5 md:h-5 text-white"></i>
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 md:gap-3 mb-4 md:mb-6">
+                            <button class="p-3 md:p-4 border border-white/30 rounded-lg hover:bg-white/10 text-center transition-colors" data-slot="morning">
+                                <h4 class="font-medium text-white text-sm md:text-base">Morning</h4>
+                                <p class="text-xs md:text-sm text-white/70">9 AM - 12 PM</p>
+                            </button>
+                            <button class="p-3 md:p-4 border border-white/30 rounded-lg hover:bg-white/10 text-center transition-colors" data-slot="afternoon">
+                                <h4 class="font-medium text-white text-sm md:text-base">Afternoon</h4>
+                                <p class="text-xs md:text-sm text-white/70">12 PM - 3 PM</p>
+                            </button>
+                            <button class="p-3 md:p-4 border border-white/30 rounded-lg hover:bg-white/10 text-center transition-colors" data-slot="evening">
+                                <h4 class="font-medium text-white text-sm md:text-base">Evening</h4>
+                                <p class="text-xs md:text-sm text-white/70">3 PM - 6 PM</p>
+                            </button>
+                            <button class="p-3 md:p-4 border border-white/30 rounded-lg hover:bg-white/10 text-center transition-colors" data-slot="night">
+                                <h4 class="font-medium text-white text-sm md:text-base">Night</h4>
+                                <p class="text-xs md:text-sm text-white/70">6 PM - 9 PM</p>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Confirmation View -->
+                    <div data-view="confirmation" class="hidden">
+                        <div class="text-center">
+                            <div class="w-12 h-12 md:w-16 md:h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4 border border-green-500/30">
+                                <i data-lucide="check-circle" class="w-6 h-6 md:w-8 md:h-8 text-green-400"></i>
+                            </div>
+                            <h3 class="text-lg md:text-xl font-semibold text-white mb-2">Thank You</h3>
+                            <p class="text-white/80 mb-4 md:mb-6 text-sm md:text-base">Your callback is scheduled. An advisor will contact you during your selected time.</p>
+                            <button class="px-4 md:px-6 py-2 md:py-3 bg-electric-blue/20 text-white rounded-lg hover:bg-electric-blue/30 border border-electric-blue/30 transition-colors text-sm md:text-base" data-action="close-modal">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Offers Modal -->
+    <div id="offers-modal" class="fixed inset-0 bg-black/30 z-50 hidden modal-backdrop">
+        <div class="flex items-center justify-center min-h-screen p-3 md:p-4">
+            <div class="glass-card rounded-xl md:rounded-2xl max-w-sm md:max-w-lg w-full mx-2 md:mx-4 transform scale-95 opacity-0">
+                <div class="p-4 md:p-6">
+                    <div class="flex items-center justify-between mb-3 md:mb-4">
+                        <h3 class="text-base md:text-lg font-semibold text-white">Special Offers</h3>
+                        <button class="w-7 h-7 md:w-8 md:h-8 rounded-lg hover:bg-white/10 flex items-center justify-center transition-colors" data-action="close-modal">
+                            <i data-lucide="x" class="w-4 h-4 md:w-5 md:h-5 text-white"></i>
+                        </button>
+                    </div>
+                    <div id="offers-content" class="space-y-3 md:space-y-4 max-h-64 md:max-h-96 overflow-y-auto">
+                        <!-- Offers will be dynamically populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 left-6 z-50 hidden">
+        <div class="glass-card px-6 py-4 rounded-lg flex items-center space-x-3">
+            <i data-lucide="smartphone" class="w-5 h-5 text-white"></i>
+            <div>
+                <p class="font-medium text-white">Add to Home Screen</p>
+                <p class="text-sm text-white/80">For the best experience</p>
+            </div>
+            <button id="add-to-home" class="px-3 py-1 bg-electric-blue/20 text-white rounded text-sm hover:bg-electric-blue/30 border border-electric-blue/30">
+                Add
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 

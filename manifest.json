@@ -1,0 +1,61 @@
+{
+  "name": "Tata Motors Customer Engagement Portal",
+  "short_name": "Tata Motors",
+  "description": "Official Tata Motors Customer Engagement Portal - Connect with advisors, book test drives, and explore offers",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#1e40af",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["business", "automotive"],
+  "icons": [
+    {
+      "src": "https://www.tatamotors.com/wp-content/themes/TataMotors/images/Tata-Motors-logo.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://www.tatamotors.com/wp-content/themes/TataMotors/images/Tata-Motors-logo.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://www.tatamotors.com/wp-content/uploads/2025/05/All-new-altroz-ember-glow-lowres.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "form_factor": "wide"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Book Test Drive",
+      "short_name": "Test Drive",
+      "description": "Book a test drive for your preferred Tata vehicle",
+      "url": "/?action=test-drive",
+      "icons": [
+        {
+          "src": "https://www.tatamotors.com/wp-content/themes/TataMotors/images/Tata-Motors-logo.svg",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Call Advisor",
+      "short_name": "Call",
+      "description": "Call your Tata Motors advisor directly",
+      "url": "/?action=call-advisor",
+      "icons": [
+        {
+          "src": "https://www.tatamotors.com/wp-content/themes/TataMotors/images/Tata-Motors-logo.svg",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
+} 
